@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const connectDb = require("./utils/connectDb");
+const Score = require("./models/Score");
 
 const db = connectDb();
 
@@ -26,7 +27,19 @@ app.get("/scores", (req, res) => {
 });
 
 app.post("/scores", (req, res) => {
-  res.status(200).json(req.body);
+  console.log("req.body", req.body);
+  const score = new Score({
+    user: "anonymous",
+    points: req.body.points,
+    date: req.body.date
+  });
+  score.save((err, score) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Failed to save score" });
+    }
+    res.status(201).json({ data: score });
+  });
 });
 
 const PORT = 5000;
