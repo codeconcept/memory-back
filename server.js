@@ -18,9 +18,18 @@ app.get("/", (req, res) => {
 
 app.get("/scores", (req, res) => {
   if (db) {
-    res
-      .status(200)
-      .json({ message: "DB ready", date: new Date().toISOString() });
+    Score.find({})
+      .sort({ time: 1 })
+      .limit(3)
+      .exec((err, scores) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ message: "could not retrieve best scores" });
+        }
+        console.log("scores", scores);
+        return res.status(200).json({ scores });
+      });
   } else {
     res.status(500).json({ message: "DB is NOT ready" });
   }
