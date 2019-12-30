@@ -30,7 +30,7 @@ app.post("/scores", (req, res) => {
   console.log("req.body", req.body);
   const score = new Score({
     user: "anonymous",
-    points: req.body.points,
+    time: req.body.time,
     date: req.body.date
   });
   score.save((err, score) => {
